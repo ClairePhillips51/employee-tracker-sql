@@ -7,7 +7,21 @@ class CRUD {
     }
 
     static async read(connection, table, callback) {
-        await connection.query("SELECT * FROM " + table, (err, res) => {
+        const query = await connection.query("SELECT * FROM " + table, (err, res) => {
+            if (err) throw err;
+            //console.log(res);
+            callback(res);
+        });
+    }
+
+    static async join(connection, table, data, condition, callback) {
+        let columns = "";
+        for(let i = 0; i < data.length; i++){
+            columns += data[i] + ", ";
+        }
+        columns = columns.slice(0,-2);
+        console.log(columns);
+        const query = await connection.query("SELECT " + columns + " FROM " + table + " WHERE " + condition, (err, res) => {
             if (err) throw err;
             //console.log(res);
             callback(res);
@@ -15,7 +29,13 @@ class CRUD {
     }
 
     static async search(connection, table, data, callback) {
-        await connection.query("SELECT * FROM " + table + " WHERE ?", data, (err, res) => {
+        let conditions = "";
+        for (const [key, value] of Object.entries(data)) {
+            conditions += `${key} = '${value}' AND `;
+        }
+        conditions = conditions.slice(0,-5);
+
+        await connection.query("SELECT * FROM " + table + " WHERE " + conditions, (err, res) => {
             if (err) throw err;
             //console.log(res);
             callback(res);
@@ -25,7 +45,7 @@ class CRUD {
     static async update(connection, table, data) {
         let conditions = "";
         for (const [key, value] of Object.entries(data[1])) {
-            conditions += `'${key}' = '${value}' AND `;
+            conditions += `${key} = '${value}' AND `;
         }
         conditions = conditions.slice(0,-5);
 

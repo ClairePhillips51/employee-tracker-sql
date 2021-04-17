@@ -80,7 +80,13 @@ async function main(){
       });
       break;
     case "View Roles":
-      crud.read(connection, "employee_role", (data) => {
+      let request = [
+        "employee_role.id",
+        "title",
+        "salary",
+        "department_name"
+      ];
+      crud.join(connection, ["employee_role","department"], request, "employee_role.department_id = department.id", (data) => {
         console.table(data);
         main();
       });
@@ -113,7 +119,7 @@ async function main(){
         .then((responses) => {
           // Search for the department ID
           crud.search(connection, "department", {department_name: responses.department}, (res) => {
-            crud.create(connection, "employee_role", {title: responses.title, salary: responses.salary, department_id: res[0].id});
+            crud.create(connection, "employee_role", {title: responses.title, salary: parseFloat(responses.salary), department_id: res[0].id});
             main();
           });
         });
@@ -141,10 +147,24 @@ async function main(){
       });
       break;
     case "View Employees":
-      crud.read(connection, "employee", (data) => {
+      let emp_request = [
+        "employee.id",
+        "first_name",
+        "last_name",
+        "title",
+        "salary",
+        "manager_id",
+        "department_name"
+      ];
+      crud.join(connection, ["employee","employee_role","department"], emp_request, "employee.role_id = employee_role.id AND employee_role.department_id = department.id", (data) => {
         console.table(data);
         main();
       });
+
+      //crud.read(connection, "employee", (data) => {
+      //  console.table(data);
+      //  main();
+      //});
       break;
     case "Add Employee":
       crud.read(connection, "employee_role", (data) => {
