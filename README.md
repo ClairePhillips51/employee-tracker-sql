@@ -3,8 +3,6 @@
 ## Links
 Link to walkthrough video [Video Link](https://drive.google.com/file/d/1d6P9nFZTJyfAEws1y9G8UdExHvlYrN_L/view)
 
-You can also view the video on [Youtube Link](hhttps://www.youtube.com/watch?v=FHFmDh0qUuc)
-
 What the command line application looks like. 
 Part one: ![What the generated command line application look like picture one](pictures/Finished-1.png)
 
