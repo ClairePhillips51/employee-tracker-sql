@@ -120,6 +120,25 @@ async function main(){
       });
       break;
     case "Remove Role":
+      crud.read(connection, "employee_role", (data) => {
+        let role_list = [];
+        for(let i = 0; i < data.length; i++){
+          role_list.push(data[i].title);
+        }
+        inquirer
+        .prompt([
+          {
+            type: 'list',
+            message: 'What role should be removed?',
+            name: 'role',
+            choices: role_list,
+          },
+        ])
+        .then((responses) => {
+          crud.delete(connection, "employee_role", {title: responses.role});
+          main();
+        });
+      });
       break;
     case "View Employees":
       crud.read(connection, "employee", (data) => {
@@ -222,7 +241,27 @@ async function main(){
       });
       break;
     case "Remove Employee":
-      main();
+      crud.read(connection, "employee", (data) => {
+        let employee_list = [];
+        for(let i = 0; i < data.length; i++){
+          employee_list.push(data[i].first_name + " " + data[i].last_name);
+        }
+        inquirer
+        .prompt([
+          {
+            type: 'list',
+            message: 'Who should I put on ice?',
+            name: 'name',
+            choices: employee_list,
+          },
+        ])
+        .then((res) => {
+          let first_name = res.name.split(" ")[0];
+          let last_name = res.name.split(" ")[1];
+          crud.delete(connection, "employee", {first_name: first_name, last_name: last_name});
+          main();
+        });
+      });
       break;
     default:
       connection.end();
