@@ -5,14 +5,8 @@ const crud = require('./src/crud.js')
 
 const connection = mysql.createConnection({
   host: 'localhost',
-
-  // Your port; if not 3306
   port: 3306,
-
-  // Your username
   user: 'root',
-
-  // Be sure to update with your own MySQL password!
   password: 'SmaugandCal2',
   database: 'employee_tracker_db',
 });
@@ -36,7 +30,7 @@ async function main(){
     choice = responses.choice;
   });
 
-  // Display prompt for Engineer, intern, or set done to true.
+  // Will return to the main function and prompt after every specific prompt is run.
   switch (choice) {
     case "View Departments":
       crud.read(connection, "department", (data) => {
@@ -147,6 +141,7 @@ async function main(){
       });
       break;
     case "View Employees":
+      // Setting up the join
       let emp_request = [
         "employee.id",
         "first_name",
@@ -160,11 +155,6 @@ async function main(){
         console.table(data);
         main();
       });
-
-      //crud.read(connection, "employee", (data) => {
-      //  console.table(data);
-      //  main();
-      //});
       break;
     case "Add Employee":
       crud.read(connection, "employee_role", (data) => {
@@ -270,7 +260,7 @@ async function main(){
         .prompt([
           {
             type: 'list',
-            message: 'Who should I put on ice?',
+            message: 'Whic employee do you wish to remove?',
             name: 'name',
             choices: employee_list,
           },
@@ -289,10 +279,9 @@ async function main(){
   }
 }
 
-// Examples
+// Examples runs to check the operations run
 //crud.create(connection, "department", {department_name: "HR"});
 //console.log(crud.read(connection, "department"));
-
 //crud.create(connection, "employee_role", {title: "manager", salary: 2.0, department_id: 8});
 //console.log(crud.read(connection, "employee_role"));
 //crud.update(connection, "employee_role", [{salary: 2000.0},{title: "manager"}])
@@ -300,6 +289,6 @@ async function main(){
 
 connection.connect((err) => {
   if (err) throw err;
-  console.log("i work");
+  console.log("I work");
   main();
 });
